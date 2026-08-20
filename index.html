@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>配列と関数を動かして理解する｜情報Ⅰ共通テスト対策問題集</title>
+<meta name="description" content="添字と中身の対応、二次元配列の行と列、関数の引数と戻り値を、実際に値を変えながら確かめます。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%2315181c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22monospace%22 fill=%22%23fff%22 text-anchor=%22middle%22%3E01%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css?v=239696b1">
+<link rel="stylesheet" href="css/app.css?v=28132d14">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="inner">
+    <span class="eyebrow">第 2 章　プログラミング　2-7〜2-9</span>
+    <h1>配列と関数を動かして理解する（pp.68-73）</h1>
+    <p class="lead">添字と中身の対応、二次元配列の行と列、関数の引数と戻り値を、実際に値を変えながら確かめます。</p>
+    <p class="credit">Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="step" id="step1">
+    <h2><span class="no">STEP 1</span>一次元配列：合計と最大を求める（2-7 問1）</h2>
+    <p class="desc">1週間のスマートフォン使用時間です。<strong>添字 i</strong> と <strong>中身 Shiyou_jikan[i]</strong> の区別に注目してください。</p>
+    <div class="panel">
+      <div class="btn-row" style="flex-wrap:wrap">
+        <button class="btn primary" id="aStep">1行すすめる ▶</button>
+        <button class="btn" id="aPlay">自動で動かす</button>
+        <button class="btn ghost" id="aReset">最初から</button>
+        <span class="badge" id="aProg"></span>
+      </div>
+      <div class="arr1" id="aArr" style="margin-top:12px"></div>
+      <div class="grid c2" style="margin-top:14px">
+        <div>
+          <pre class="code" id="aCode"></pre>
+          <div class="note" id="aNote" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="metrics">
+            <div class="metric"><div class="k">i</div><div class="v" id="aI">—</div></div>
+            <div class="metric"><div class="k">goukei</div><div class="v" id="aG">0</div></div>
+            <div class="metric"><div class="k">max_jikan</div><div class="v" id="aM">0</div></div>
+            <div class="metric"><div class="k">j（最大の添字）</div><div class="v" id="aJ">−1</div></div>
+          </div>
+          <div class="note info" style="margin-top:12px">
+            <strong>j は「最大値そのもの」ではなく「最大値がある場所（添字）」</strong>です。
+            だから最後に <span class="mono">Youbi[j]</span> で曜日を取り出せます。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step2">
+    <h2><span class="no">STEP 2</span>硬貨の枚数を最小にする（2-7 問2）</h2>
+    <p class="desc">大きい硬貨から順に「何枚使えるか」を割り算で求め、余りを次に回します。金額を変えて試しましょう。</p>
+    <div class="panel">
+      <label class="fld" for="kIn">金額：<span class="mono" id="kInV">789</span> 円</label>
+      <input type="range" id="kIn" min="1" max="999" step="1" value="789">
+      <div class="grid c2" style="margin-top:12px">
+        <div><pre class="code" id="kCode"></pre></div>
+        <div>
+          <div class="coins" id="kCoins"></div>
+          <div class="note" id="kNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+      <div class="note warn" style="margin-top:12px">
+        <strong>大きい硬貨から</strong>調べるので、繰り返しは <span class="mono">5 から 0 まで1ずつ減らし</span>ながらです。
+        小さいほうから調べると、枚数が最小になりません。
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step3">
+    <h2><span class="no">STEP 3</span>二次元配列：行と列（2-8 問1）</h2>
+    <p class="desc">マスをクリックすると、その場所の書き方が出ます。<strong>Tensu[i][0] の i は「何人目」</strong>です。</p>
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <div class="tbl-scroll"><table class="mat" id="tMat"></table></div>
+          <div class="note" id="tNote" style="margin-top:12px">マスをクリックしてください。</div>
+        </div>
+        <div>
+          <pre class="code" id="tCode"></pre>
+          <div class="note info" style="margin-top:12px">
+            <span class="mono">Tensu[i]</span> は<strong>1人分の配列</strong>（例：[90, 80]）。
+            そこからさらに <span class="mono">[0]</span> や <span class="mono">[1]</span> で1つの点数を取り出します。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step4">
+    <h2><span class="no">STEP 4</span>二次元配列を集計する（2-8 問2）</h2>
+    <p class="desc">出席簿です（0＝出席、1＝欠席）。マスをクリックすると出席・欠席が切りかわり、<strong>行の合計</strong>と<strong>列の合計</strong>が変わります。</p>
+    <div class="panel">
+      <div class="tbl-scroll"><table class="mat" id="sMat"></table></div>
+      <div class="note" id="sNote" style="margin-top:12px"></div>
+      <div class="grid c2" style="margin-top:12px">
+        <div><pre class="code" id="sCode"></pre></div>
+        <div class="note info" style="margin-top:0">
+          <strong>Ninzu[i]</strong> は「i 日目の欠席者数」なので、<strong>行（横）方向</strong>に足していきます。<br>
+          <strong>Nissu[j]</strong> は「出席番号 j の生徒の欠席日数」なので、<strong>列（縦）方向</strong>に足していきます。<br>
+          どちらも <span class="mono">〜 = 〜 + Syussekibo[i][j]</span> という同じ形。<strong>添字が i か j か</strong>だけが違います。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step5">
+    <h2><span class="no">STEP 5</span>関数：引数と戻り値（2-9）</h2>
+    <p class="desc">関数に渡す値を<strong>引数</strong>といいます。関数の中では別の名前（a・b）で受け取ります。</p>
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <label class="fld" for="zan">残高 zandaka：<span class="mono" id="zanV">1000</span> 円</label>
+          <input type="range" id="zan" min="0" max="3000" step="50" value="1000">
+          <label class="fld" for="shi" style="margin-top:10px">支払金額 shiharai：<span class="mono" id="shiV">1500</span> 円</label>
+          <input type="range" id="shi" min="0" max="3000" step="50" value="1500">
+          <div class="fnbox" style="margin-top:12px">
+            <div class="small" style="color:var(--muted)">呼び出し</div>
+            <div class="mono" style="font-weight:700;margin-top:4px">メッセージ(<span class="arg" id="argA">1000</span>, <span class="arg" id="argB">1500</span>)</div>
+            <div class="small" style="color:var(--muted);margin-top:10px">関数の中では</div>
+            <div class="mono" style="margin-top:4px">a ＝ <span id="inA"></span>　／　b ＝ <span id="inB"></span></div>
+          </div>
+        </div>
+        <div>
+          <pre class="code" id="fCode"></pre>
+          <div class="note" id="fNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+      <hr class="sep">
+      <p class="qhead">関数を組み合わせる（2-9 問1）</p>
+      <p class="desc" style="margin-top:0">「取出」と「整列」をどちらの順で使うかで、結果が変わります。ボタンで見比べましょう。</p>
+      <div class="btn-row" style="flex-wrap:wrap">
+        <button class="btn" data-fn="a">取出(整列(Tanka), 999)</button>
+        <button class="btn" data-fn="b">整列(取出(Tanka, 999))</button>
+      </div>
+      <div class="note" id="oNote" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section class="step" id="stepBook">
+    <h2><span class="no">本文</span>本文の問題を解く（2-7〜2-9）</h2>
+    <div class="panel" id="bookBox"></div>
+    <div class="note" id="bookNote" style="margin-top:10px"></div>
+  </section>
+
+  <section class="step" id="glossary">
+    <h2><span class="no">用語</span>この節で出てくることば</h2>
+    <div class="panel"><div id="glossBox"></div></div>
+  </section>
+
+  <section class="step" id="wrap">
+    <h2><span class="no">まとめ</span>おさえておきたいこと</h2>
+    <div class="panel">
+      <ul class="bullets">
+        <li>添字は0から始まるので、要素数 n の配列は <span class="mono">0 から 要素数(配列)−1</span> まで繰り返します。</li>
+        <li><strong>最大値を探すとき</strong>は、値そのもの（max）と<strong>場所（添字 j）</strong>の両方を覚えておくと、あとで別の配列から取り出せます。</li>
+        <li>二次元配列 <span class="mono">A[i][j]</span> は「i 番目の配列の j 番目」。<strong>1つ目が行、2つ目が列</strong>。</li>
+        <li>集計は <span class="mono">合計 = 合計 + 要素</span> の形。<strong>どの添字で足すか</strong>で、行方向か列方向かが決まります。</li>
+        <li>関数は<strong>引数</strong>を受け取って<strong>戻り値</strong>を返す。中で使う名前（a・b）は、呼び出し側の名前と違ってかまいません。</li>
+        <li>関数を組み合わせるときは<strong>内側から先に実行</strong>されます。順番が変わると結果も変わります。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">活用</span>授業・探究での使い方</h2>
+    <div class="use-note">
+      <h3>授業で</h3>
+      <ul>
+        <li>STEP 1 で「いま i はいくつ？ Shiyou_jikan[i] は？」と指名して答えさせる。</li>
+        <li>STEP 3 の表のマスをクリックさせ、Tensu[i][0] という書き方と場所を一致させる。</li>
+        <li>STEP 5 で残高と支払金額を変え、どちらの分岐に入るかを予想させてから実行する。</li>
+      </ul>
+      <h3 style="margin-top:12px">探究で</h3>
+      <ul>
+        <li>自分の1週間のスマートフォン使用時間を入れて、合計と最大を求める。</li>
+        <li>二次元配列で、行の合計と列の合計が何を表すかを自分のことばで説明する。</li>
+        <li>関数にすると何が便利になるかを、同じ処理を2回書く場合と比べて考える。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  情報Ⅰ 共通テスト対策問題集（技術評論社）連動Webアプリ　/　Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI
+</footer>
+
+<script src="js/terms.js?v=867e9694"></script>
+<script src="js/quiz.js?v=5d6779cc"></script>
+<script src="js/app.js?v=2bb8d84b"></script>
+</body>
+</html>
