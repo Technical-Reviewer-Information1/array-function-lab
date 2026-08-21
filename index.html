@@ -6,8 +6,8 @@
 <title>配列と関数を動かして理解する｜情報Ⅰ共通テスト対策問題集</title>
 <meta name="description" content="添字と中身の対応、二次元配列の行と列、関数の引数と戻り値を、実際に値を変えながら確かめます。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%2315181c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22monospace%22 fill=%22%23fff%22 text-anchor=%22middle%22%3E01%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/style.css?v=239696b1">
-<link rel="stylesheet" href="css/app.css?v=28132d14">
+<link rel="stylesheet" href="css/style.css?v=ea93572e">
+<link rel="stylesheet" href="css/app.css?v=248fb699">
 </head>
 <body>
 
@@ -32,7 +32,16 @@
         <span class="badge" id="aProg"></span>
       </div>
       <div class="arr1" id="aArr" style="margin-top:12px"></div>
-      <div class="grid c2" style="margin-top:14px">
+      <details class="mydata">
+        <summary>自分の1週間の使用時間を入れて動かす</summary>
+        <div class="myrow" id="myRow"></div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn primary" id="myGo">このデータで動かす</button>
+          <button class="btn ghost" id="myBack">本文のデータに戻す</button>
+        </div>
+        <div class="note info" style="margin-top:10px">分（ふん）で入れてください。スマートフォンの「スクリーンタイム」の数字がそのまま使えます。</div>
+      </details>
+      <div class="grid c21" style="margin-top:14px">
         <div>
           <pre class="code" id="aCode"></pre>
           <div class="note" id="aNote" style="margin-top:12px"></div>
@@ -73,6 +82,41 @@
     </div>
   </section>
 
+
+  <section class="step" id="stepOff">
+    <h2><span class="no">実験</span>添字を1つずらすとどうなるか</h2>
+    <p class="desc">本文の【ア】は「0 から 要素数−1 まで」でした。<strong>ほかの書き方にすると何が起きるのか</strong>を実際に動かして確かめます。</p>
+    <div class="panel">
+      <div class="btn-row" style="flex-wrap:wrap">
+        <button class="btn primary" data-off="ok">0 から 要素数−1 まで（正しい）</button>
+        <button class="btn" data-off="over">0 から 要素数 まで</button>
+        <button class="btn" data-off="from1">1 から 要素数−1 まで</button>
+      </div>
+      <div class="arr1" id="offArr" style="margin-top:14px"></div>
+      <div class="grid c21" style="margin-top:14px">
+        <div><pre class="code" id="offCode"></pre></div>
+        <div>
+          <div class="metrics">
+            <div class="metric"><div class="k">goukei</div><div class="v" id="offG">0</div></div>
+            <div class="metric"><div class="k">正しい合計</div><div class="v" id="offT">1030</div></div>
+          </div>
+          <div class="note" id="offNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="stepGuess">
+    <h2><span class="no">予想</span>やる前に予想してみる</h2>
+    <div class="panel">
+      <div id="pd1"></div>
+      <hr class="sep">
+      <div id="pd2"></div>
+      <hr class="sep">
+      <div id="pd3"></div>
+    </div>
+  </section>
+
   <section class="step" id="step3">
     <h2><span class="no">STEP 3</span>二次元配列：行と列（2-8 問1）</h2>
     <p class="desc">マスをクリックすると、その場所の書き方が出ます。<strong>Tensu[i][0] の i は「何人目」</strong>です。</p>
@@ -95,7 +139,7 @@
 
   <section class="step" id="step4">
     <h2><span class="no">STEP 4</span>二次元配列を集計する（2-8 問2）</h2>
-    <p class="desc">出席簿です（0＝出席、1＝欠席）。マスをクリックすると出席・欠席が切りかわり、<strong>行の合計</strong>と<strong>列の合計</strong>が変わります。</p>
+    <p class="desc">出席簿です（0＝出席、1＝欠席）。マスをクリックすると出席・欠席が切りかわり、<strong>行の合計</strong>と<strong>列の合計</strong>が変わります。この問題は<strong>添字が 1 から始まる</strong>指定なので、繰り返しも「1 から 要素数 まで」になります。</p>
     <div class="panel">
       <div class="tbl-scroll"><table class="mat" id="sMat"></table></div>
       <div class="note" id="sNote" style="margin-top:12px"></div>
@@ -173,13 +217,13 @@
     <div class="use-note">
       <h3>授業で</h3>
       <ul>
+        <li>「予想」セクションを先に解かせ、STEP 1 の1行ずつで答え合わせをする。</li>
         <li>STEP 1 で「いま i はいくつ？ Shiyou_jikan[i] は？」と指名して答えさせる。</li>
-        <li>STEP 3 の表のマスをクリックさせ、Tensu[i][0] という書き方と場所を一致させる。</li>
-        <li>STEP 5 で残高と支払金額を変え、どちらの分岐に入るかを予想させてから実行する。</li>
+        <li>「実験：添字を1つずらすとどうなるか」で、エラーになる場合と黙って間違う場合の違いを見せる。</li>
       </ul>
       <h3 style="margin-top:12px">探究で</h3>
       <ul>
-        <li>自分の1週間のスマートフォン使用時間を入れて、合計と最大を求める。</li>
+        <li>STEP 1 の「自分の1週間の使用時間を入れて動かす」に実際のスクリーンタイムを入れ、合計と最大を求める。</li>
         <li>二次元配列で、行の合計と列の合計が何を表すかを自分のことばで説明する。</li>
         <li>関数にすると何が便利になるかを、同じ処理を2回書く場合と比べて考える。</li>
       </ul>
@@ -193,7 +237,8 @@
 </footer>
 
 <script src="js/terms.js?v=867e9694"></script>
-<script src="js/quiz.js?v=5d6779cc"></script>
-<script src="js/app.js?v=2bb8d84b"></script>
+<script src="js/quiz.js?v=13402362"></script>
+<script src="js/predict.js?v=1b9c8bf0"></script>
+<script src="js/app.js?v=fb75f841"></script>
 </body>
 </html>

@@ -46,3 +46,13 @@ table.mat td.sum{background:var(--paper-2);font-weight:700;cursor:default}
 .fnbox{border:1px solid var(--line);border-radius:3px;padding:12px;background:#fff}
 .fnbox .arg{display:inline-block;border:1px solid var(--accent);border-radius:12px;padding:3px 11px;margin:2px;
   font:700 .86rem/1.4 var(--mono);background:var(--warn-bg)}
+
+/* --- 自分のデータ --- */
+details.mydata{margin-top:14px;border:1px solid var(--rule);border-radius:3px;background:var(--paper-2);padding:10px 12px}
+details.mydata > summary{cursor:pointer;font-weight:700;font-size:.92rem;color:var(--accent)}
+details.mydata[open] > summary{margin-bottom:12px}
+.myrow{display:flex;gap:8px;flex-wrap:wrap}
+.myrow label{font:400 .7rem/1.5 var(--mono);color:var(--muted);text-align:center}
+.myrow input{display:block;width:72px;max-width:100%;font:700 1rem/1.3 var(--mono);text-align:center;
+  padding:6px 4px;border:1px solid var(--rule);border-radius:2px;background:#fff}
+.arr1 .c.ghostcell{border-style:dashed;border-color:var(--ng);color:var(--ng);background:var(--ng-bg)}

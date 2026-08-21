@@ -9,7 +9,16 @@
         <span class="badge" id="aProg"></span>
       </div>
       <div class="arr1" id="aArr" style="margin-top:12px"></div>
-      <div class="grid c2" style="margin-top:14px">
+      <details class="mydata">
+        <summary>自分の1週間の使用時間を入れて動かす</summary>
+        <div class="myrow" id="myRow"></div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn primary" id="myGo">このデータで動かす</button>
+          <button class="btn ghost" id="myBack">本文のデータに戻す</button>
+        </div>
+        <div class="note info" style="margin-top:10px">分（ふん）で入れてください。スマートフォンの「スクリーンタイム」の数字がそのまま使えます。</div>
+      </details>
+      <div class="grid c21" style="margin-top:14px">
         <div>
           <pre class="code" id="aCode"></pre>
           <div class="note" id="aNote" style="margin-top:12px"></div>
@@ -50,6 +59,41 @@
     </div>
   </section>
 
+
+  <section class="step" id="stepOff">
+    <h2><span class="no">実験</span>添字を1つずらすとどうなるか</h2>
+    <p class="desc">本文の【ア】は「0 から 要素数−1 まで」でした。<strong>ほかの書き方にすると何が起きるのか</strong>を実際に動かして確かめます。</p>
+    <div class="panel">
+      <div class="btn-row" style="flex-wrap:wrap">
+        <button class="btn primary" data-off="ok">0 から 要素数−1 まで（正しい）</button>
+        <button class="btn" data-off="over">0 から 要素数 まで</button>
+        <button class="btn" data-off="from1">1 から 要素数−1 まで</button>
+      </div>
+      <div class="arr1" id="offArr" style="margin-top:14px"></div>
+      <div class="grid c21" style="margin-top:14px">
+        <div><pre class="code" id="offCode"></pre></div>
+        <div>
+          <div class="metrics">
+            <div class="metric"><div class="k">goukei</div><div class="v" id="offG">0</div></div>
+            <div class="metric"><div class="k">正しい合計</div><div class="v" id="offT">1030</div></div>
+          </div>
+          <div class="note" id="offNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="stepGuess">
+    <h2><span class="no">予想</span>やる前に予想してみる</h2>
+    <div class="panel">
+      <div id="pd1"></div>
+      <hr class="sep">
+      <div id="pd2"></div>
+      <hr class="sep">
+      <div id="pd3"></div>
+    </div>
+  </section>
+
   <section class="step" id="step3">
     <h2><span class="no">STEP 3</span>二次元配列：行と列（2-8 問1）</h2>
     <p class="desc">マスをクリックすると、その場所の書き方が出ます。<strong>Tensu[i][0] の i は「何人目」</strong>です。</p>
@@ -72,7 +116,7 @@
 
   <section class="step" id="step4">
     <h2><span class="no">STEP 4</span>二次元配列を集計する（2-8 問2）</h2>
-    <p class="desc">出席簿です（0＝出席、1＝欠席）。マスをクリックすると出席・欠席が切りかわり、<strong>行の合計</strong>と<strong>列の合計</strong>が変わります。</p>
+    <p class="desc">出席簿です（0＝出席、1＝欠席）。マスをクリックすると出席・欠席が切りかわり、<strong>行の合計</strong>と<strong>列の合計</strong>が変わります。この問題は<strong>添字が 1 から始まる</strong>指定なので、繰り返しも「1 から 要素数 まで」になります。</p>
     <div class="panel">
       <div class="tbl-scroll"><table class="mat" id="sMat"></table></div>
       <div class="note" id="sNote" style="margin-top:12px"></div>

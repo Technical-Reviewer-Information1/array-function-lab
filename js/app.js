@@ -8,10 +8,11 @@
   }
 
   /* ============ STEP 1 ============ */
-  const JIKAN = [120, 100, 180, 200, 145, 115, 170];
+  let JIKAN = [120, 100, 180, 200, 145, 115, 170];
+  const BOOKJIKAN = JIKAN.slice();
   const YOUBI = ['月', '火', '水', '木', '金', '土', '日'];
-  const A_LINES = [
-    'Shiyou_jikan = [120, 100, 180, 200, 145, 115, 170]',
+  const A_LINES = () => [
+    'Shiyou_jikan = [' + JIKAN.join(', ') + ']',
     'Youbi = ["月", "火", "水", "木", "金", "土", "日"]',
     'j = -1', 'goukei = 0', 'max_jikan = 0',
     'i を 0 から 要素数(Shiyou_jikan)-1 まで 1 ずつ増やしながら繰り返す:',
@@ -45,7 +46,7 @@
   }
   function aRender(fr, k) {
     const f = fr[k];
-    code('aCode', A_LINES, f.line);
+    code('aCode', A_LINES(), f.line);
     $('aArr').innerHTML = JIKAN.map((v, x) =>
       '<div class="c ' + (x === f.i ? 'now' : (x === f.j ? 'max' : (f.i >= 0 && x < f.i ? 'past' : ''))) + '">' +
       v + '<em>[' + x + '] ' + YOUBI[x] + '</em></div>').join('');
@@ -56,6 +57,7 @@
   }
   function stepper(pre, build, render) {
     let fr = build(), i = 0, timer = null;
+    function rebuild() { fr = build(); i = 0; stop(); show(); }
     function show() { render(fr, i); $(pre + 'Step').disabled = i >= fr.length - 1; }
     function stop() { if (timer) clearInterval(timer); timer = null; if ($(pre + 'Play')) $(pre + 'Play').textContent = '自動で動かす'; }
     $(pre + 'Step').addEventListener('click', () => { if (i < fr.length - 1) { i++; show(); } });
@@ -66,6 +68,7 @@
       timer = setInterval(() => { if (i >= fr.length - 1) { stop(); return; } i++; show(); }, 520);
     });
     show();
+    return { rebuild: rebuild };
   }
 
   /* ============ STEP 2 硬貨 ============ */
@@ -120,19 +123,21 @@
   }
 
   /* ============ STEP 4 出席簿 ============ */
+  /* 2-8 問2 は「配列の添字は 1 から始まる」問題。正誤表（P.66）で (03)(04) 行が
+     「1 から 要素数 まで」に修正されたため、表示も 1 始まりにそろえている。 */
   const S_LINES = ['Syussekibo = [[0, 1, …][0, 0, …]…]', 'Ninzu = [0, 0, …, 0], Nissu = [0, 0, …, 0]',
-    'i を 0 から 要素数(Syussekibo)-1 まで 1 ずつ増やしながら繰り返す:',
-    '│ j を 0 から 要素数(Syussekibo[i])-1 まで 1 ずつ増やしながら繰り返す:',
+    'i を 1 から 要素数(Syussekibo) まで 1 ずつ増やしながら繰り返す:',
+    '│ j を 1 から 要素数(Syussekibo[i]) まで 1 ずつ増やしながら繰り返す:',
     '│ │ Ninzu[i] = Ninzu[i] + Syussekibo[i][j]',
     '└ └ Nissu[j] = Nissu[j] + Syussekibo[i][j]'];
   const SY = [[0, 1, 0, 0, 1], [0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 0, 1, 1, 0]];
   function drawS() {
     code('sCode', S_LINES, 0);
     const rows = SY.length, cols = SY[0].length;
-    let h = '<thead><tr><th></th>' + Array.from({ length: cols }, (_, j) => '<th>番号[' + j + ']</th>').join('') + '<th>Ninzu[i]</th></tr></thead><tbody>';
+    let h = '<thead><tr><th></th>' + Array.from({ length: cols }, (_, j) => '<th>番号[' + (j + 1) + ']</th>').join('') + '<th>Ninzu[i]</th></tr></thead><tbody>';
     SY.forEach((r, i) => {
       const rs = r.reduce((a, b) => a + b, 0);
-      h += '<tr><th>[' + i + ']日目</th>' + r.map((v, j) =>
+      h += '<tr><th>[' + (i + 1) + ']日目</th>' + r.map((v, j) =>
         '<td data-i="' + i + '" data-j="' + j + '" style="' + (v ? 'color:#c0392b;font-weight:700' : 'color:#858a92') + '">' + v + '</td>').join('') +
         '<td class="sum rowhit">' + rs + '</td></tr>';
     });
@@ -140,14 +145,19 @@
       '<td class="sum colhit">' + SY.reduce((a, r) => a + r[j], 0) + '</td>').join('') + '<td class="sum"></td></tr>';
     $('sMat').innerHTML = h + '</tbody>';
     $('sMat').querySelectorAll('td[data-i]').forEach(td => td.addEventListener('click', () => {
-      const i = +td.dataset.i, j = +td.dataset.j;
+      const i = +td.dataset.i, j = +td.dataset.j, I = i + 1, J = j + 1;
       SY[i][j] = SY[i][j] ? 0 : 1; drawS();
       const n = $('sNote'); n.className = 'note ok';
-      n.innerHTML = '<span class="mono">Syussekibo[' + i + '][' + j + ']</span> を <strong>' + SY[i][j] + '</strong>（' +
+      n.innerHTML = '<span class="mono">Syussekibo[' + I + '][' + J + ']</span> を <strong>' + SY[i][j] + '</strong>（' +
         (SY[i][j] ? '欠席' : '出席') + '）にしました。' +
-        '<strong>' + i + '日目の欠席者数（Ninzu[' + i + ']）</strong>と、<strong>番号' + j + 'の欠席日数（Nissu[' + j + ']）</strong>の両方が変わります。';
+        '<strong>' + I + '日目の欠席者数（Ninzu[' + I + ']）</strong>と、<strong>番号' + J + 'の欠席日数（Nissu[' + J + ']）</strong>の両方が変わります。';
     }));
-    if (!$('sNote').innerHTML) { $('sNote').className = 'note info'; $('sNote').textContent = 'マスをクリックすると、出席（0）と欠席（1）が切りかわります。'; }
+    if (!$('sNote').innerHTML) {
+      $('sNote').className = 'note info';
+      $('sNote').innerHTML = 'マスをクリックすると、出席（0）と欠席（1）が切りかわります。' +
+        '<br><strong>この問題だけ添字が 1 から始まります。</strong>問題文に「配列の添字は 1 から始まるものとする」と書かれているからです。' +
+        'STEP 3（2-8 問1）は 0 から始まりでした——<strong>添字の始まりは問題文の指定に従います</strong>。';
+    }
   }
 
   /* ============ STEP 5 関数 ============ */
@@ -190,12 +200,108 @@
     }
   }
 
+
+  /* ============ 自分のデータ ============ */
+  function drawMy() {
+    $('myRow').innerHTML = YOUBI.map(function (y, i) {
+      return '<label>' + y + '<input type="number" min="0" max="1440" step="5" id="my' + i + '" value="' + JIKAN[i] + '"></label>';
+    }).join('');
+  }
+
+  /* ============ 実験：添字をずらす ============ */
+  function drawOff(kind) {
+    const n = JIKAN.length;
+    const from = kind === 'from1' ? 1 : 0;
+    const to = kind === 'over' ? n : n - 1;
+    const lines = [
+      'goukei = 0',
+      'i を ' + from + ' から ' + (kind === 'ok' ? '要素数(Shiyou_jikan)-1' : (kind === 'over' ? '要素数(Shiyou_jikan)' : '要素数(Shiyou_jikan)-1')) + ' まで 1 ずつ増やしながら繰り返す:',
+      '└ goukei = goukei + Shiyou_jikan[i]',
+      '表示する(goukei)'
+    ];
+    code('offCode', lines, 3);
+    let g = 0, bad = -1, used = [];
+    for (let i = from; i <= to; i++) {
+      if (i >= n) { bad = i; break; }
+      g += JIKAN[i]; used.push(i);
+    }
+    const total = JIKAN.reduce((a, b) => a + b, 0);
+    $('offArr').innerHTML = JIKAN.map(function (v, x) {
+      return '<div class="c ' + (used.indexOf(x) >= 0 ? 'now' : 'past') + '">' + v + '<em>[' + x + '] ' + YOUBI[x] + '</em></div>';
+    }).join('') + (bad >= 0 ? '<div class="c ghostcell">？<em>[' + bad + ']</em></div>' : '');
+    $('offG').textContent = bad >= 0 ? 'エラー' : g;
+    $('offT').textContent = total;
+    const nt = $('offNote');
+    if (kind === 'ok') {
+      nt.className = 'note ok';
+      nt.innerHTML = '添字 0〜' + (n - 1) + ' の <strong>' + n + ' 個すべて</strong>を足せました。合計 <strong>' + g + '</strong> 分。これが正しい書き方です。';
+    } else if (kind === 'over') {
+      nt.className = 'note ng';
+      nt.innerHTML = '<strong>i が ' + bad + ' になったところで止まりました。</strong>' +
+        '配列にあるのは添字 0〜' + (n - 1) + ' の ' + n + ' 個だけで、<span class="mono">Shiyou_jikan[' + bad + ']</span> は<strong>存在しません</strong>。' +
+        '「要素数」と「最後の添字」は1つちがう——ここが選択肢①のわなです。';
+    } else {
+      nt.className = 'note ng';
+      nt.innerHTML = '<strong>' + YOUBI[0] + '曜日（添字0）の ' + JIKAN[0] + ' 分が抜けました。</strong>' +
+        '合計は ' + g + ' 分となり、正しい ' + total + ' 分より ' + (total - g) + ' 分少なくなっています。' +
+        'エラーは出ないので<strong>気づきにくい間違い</strong>です。添字は 0 から数えます。';
+    }
+  }
+
   function init() {
-    stepper('a', aBuild, aRender);
+    const aRun = stepper('a', aBuild, aRender);
     $('kIn').addEventListener('input', drawK); drawK();
     drawT(null); drawS(); drawO(null);
     ['zan', 'shi'].forEach(i => $(i).addEventListener('input', drawF)); drawF();
     document.querySelectorAll('[data-fn]').forEach(b => b.addEventListener('click', () => drawO(b.dataset.fn)));
+
+    drawMy();
+    document.querySelectorAll('[data-off]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('[data-off]').forEach(x => x.classList.toggle('primary', x === b));
+        drawOff(b.dataset.off);
+      });
+    });
+    drawOff('ok');
+
+    $('myGo').addEventListener('click', function () {
+      const v = YOUBI.map((_, i) => Math.max(0, Math.min(1440, Number($('my' + i).value) || 0)));
+      JIKAN = v; aRun.rebuild(); drawOff(document.querySelector('[data-off].primary').dataset.off);
+    });
+    $('myBack').addEventListener('click', function () {
+      JIKAN = BOOKJIKAN.slice(); drawMy(); aRun.rebuild();
+      drawOff(document.querySelector('[data-off].primary').dataset.off);
+    });
+
+    Predict.make('pd1', {
+      q: '本文のデータ [120, 100, 180, 200, 145, 115, 170] の <strong>合計使用時間</strong>は何分？',
+      type: 'num', unit: '分', placeholder: '分',
+      answer: function () { return BOOKJIKAN.reduce((a, b) => a + b, 0); },
+      show: function (r) { return '1週間で ' + r + ' 分 ＝ 約 ' + (r / 60).toFixed(1) + ' 時間。1日平均 ' + Math.round(r / 7) + ' 分です。'; },
+      why: 'プログラムは <span class="mono">goukei = goukei + Shiyou_jikan[i]</span> を7回くり返して、これと同じ計算をしています。'
+    });
+
+    Predict.make('pd2', {
+      q: 'そのとき、最後に <span class="mono">j</span> に入っている値は？',
+      type: 'pick',
+      ch: ['200（最大の使用時間）', '3（最大がある場所の添字）', '木（曜日の名前）', '6（最後の添字）'],
+      answer: function () { return 1; },
+      show: function () { return 'STEP 1 を最後まで進めると、j ＝ 3、max_jikan ＝ 200 になります。'; },
+      why: '<strong>j は場所（添字）、max_jikan は値</strong>です。場所を覚えておくから、あとで <span class="mono">Youbi[3]</span> ＝ 「木」を取り出せます。' +
+           '値だけ覚えていても、曜日名は分かりません。'
+    });
+
+    Predict.make('pd3', {
+      q: '789 円をつくるとき、硬貨は全部で何枚必要？（1・5・10・50・100・500円）',
+      type: 'num', unit: '枚', placeholder: '枚',
+      answer: function () {
+        let nokori = 789, maisu = 0;
+        for (let i = 5; i >= 0; i--) { maisu += Math.floor(nokori / KOUKA[i]); nokori %= KOUKA[i]; }
+        return maisu;
+      },
+      show: function () { return '500円×1、100円×2、50円×1、10円×3、5円×1、1円×4 で 12 枚。STEP 2 で内訳が見られます。'; },
+      why: '大きい硬貨から「÷」で枚数を取り、「%」で余りを次に回す——これがいちばん枚数が少なくなる考え方です。'
+    });
 
     Quiz.choice('bookBox', 'bookNote', [
       { k: '2-7 ア', q: '(06)行目：i をどこからどこまで繰り返すか。',
